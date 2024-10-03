@@ -1,0 +1,155 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  directUrl         = env("DIRECT_URL")
+}
+
+
+
+
+
+enum Theme {
+  GREEN       @map("#277C78")
+  CYAN        @map("#82C9D7")
+  YELLOW      @map("#F2CDAC")
+  NAVY        @map("#626070")
+  RED         @map("#C94736")
+  PURPLE      @map("#826CB0")
+  LIGHT_PURPLE @map("#AF81BA")
+  TORQUOISE    @map("#597C7C")
+  BROWN        @map("#93674F")
+  MAGENTA      @map("#934F6F")
+  BLUE         @map("#3F82B2")
+  NAVY_GRAY    @map("#97A0AC")
+  ARMY_GREEN   @map("#7F9161")
+  GOLD         @map("#CAB361")
+  ORANGE       @map("#BE6C49")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+
+model Balance {
+  id        String   @id @default(cuid())
+  current   Float
+  income    Float
+  expenses  Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  avatar    String
+  name      String
+  category  String
+  date      DateTime
+  amount    Float
+  recurring Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Budget {
+  id       String @id @default(cuid())
+  category String
+  maximum  Float
+  theme   Theme
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Pot {
+  id     String @id @default(cuid())
+  name   String
+  target Float
+  total  Float
+  theme  Theme
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model User {
+  id            String          @id @default(cuid())
+  name          String?
+  email         String          @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  password      String
+  // Optional for WebAuthn support
+  Authenticator Authenticator[]
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+ 
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@id([provider, providerAccountId])
+}
+ 
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+ 
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+ 
+  @@id([identifier, token])
+}
+
+// Optional for WebAuthn support
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@id([userId, credentialID])
+}
