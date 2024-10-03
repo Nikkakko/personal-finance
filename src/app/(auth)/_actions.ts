@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/db/prisma";
 import { signUpSchema, SignUpType } from "@/lib/db/validaton";
 import bcrypt from "bcryptjs";
+import { redirect } from "next/navigation";
 
 export async function signup(values: SignUpType) {
   try {
@@ -31,7 +32,7 @@ export async function signup(values: SignUpType) {
     }
 
     // 3. Insert the user into the database or call an Auth Library's API
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         name,
         email,
@@ -39,10 +40,7 @@ export async function signup(values: SignUpType) {
       },
     });
 
-    return {
-      user,
-      message: "User created successfully",
-    };
+    redirect("/dashboard");
   } catch (error) {
     console.error(error);
   }

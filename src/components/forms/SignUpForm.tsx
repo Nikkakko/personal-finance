@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "./password-input";
 import Link from "next/link";
 import { signup } from "@/app/(auth)/_actions";
-import { redirect } from "next/navigation";
 
 interface SignUpFormProps {}
 
@@ -43,10 +42,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({}) => {
           message: "User already exists",
         });
       }
-      if (res?.message === "User created successfully") {
-        form.reset();
-        redirect("/dashboard");
-      }
+
+      form.reset();
     });
   }
 

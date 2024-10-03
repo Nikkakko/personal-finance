@@ -44,6 +44,10 @@ model Balance {
   income    Float
   expenses  Float
 
+  // Relationships
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -57,6 +61,10 @@ model Transaction {
   amount    Float
   recurring Boolean
 
+  // Relationships
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -66,6 +74,11 @@ model Budget {
   category String
   maximum  Float
   theme   Theme
+
+  // Relationships
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -77,6 +90,10 @@ model Pot {
   target Float
   total  Float
   theme  Theme
+
+  // Relationships
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -94,6 +111,13 @@ model User {
   password      String
   // Optional for WebAuthn support
   Authenticator Authenticator[]
+
+  // Relationships
+  balances      Balance[]
+  transactions  Transaction[]
+  budgets       Budget[]
+  pots          Pot[]
+
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

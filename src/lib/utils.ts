@@ -11,3 +11,12 @@ export async function hashPassword(password: string) {
   const hashedPassword = await bcrypt.hash(password, saltRounds);
   return hashedPassword;
 }
+
+export function formatCurrency(amount: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    minimumIntegerDigits: 2,
+  }).format(amount);
+}
