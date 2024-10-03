@@ -7,8 +7,7 @@ import { signInSchema } from "./lib/db/validaton";
 import { ZodError } from "zod";
 import { getUserFromDb } from "./lib/db/queries";
 import { Adapter } from "next-auth/adapters";
-import { hashPassword } from "./lib/utils";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma) as Adapter,
@@ -41,7 +40,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
 
           // Return user object without the password
-          return user;
+          const { password: _, ...userWithoutPassword } = user;
+          return userWithoutPassword;
         } catch (error) {
           if (error instanceof ZodError) {
             console.error("Validation error:", error.errors);
@@ -53,24 +53,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  secret: process.env.SECRET,
+  secret: process.env.AUTH_SECRET,
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
-    jwt: async ({ token, user }) => {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
+        token.name = user.name;
       }
       return token;
     },
-    session: async ({ session, token }) => {
-      if (token) {
-        session.user.id = token.id;
-        session.user.email = token.email;
+    async session({ session, token }) {
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.name = token.name as string;
       }
       return session;
     },
   },
   pages: {
-    signIn: "/auth/signin",
+    signIn: "/auth/sign-in",
   },
 });

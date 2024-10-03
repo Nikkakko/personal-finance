@@ -36,14 +36,10 @@ export let getTransactionById = unstable_cache(
   { tags: ["transactions"] }
 );
 
-export let getUserFromDb = unstable_cache(
-  async (email: string) => {
-    return prisma.user.findFirst({
-      where: {
-        email,
-      },
-    });
-  },
-  ["user-by-email"],
-  { tags: ["users"] }
-);
+export let getUserFromDb = (email: string) => {
+  return prisma.user.findFirst({
+    where: {
+      email,
+    },
+  });
+};
