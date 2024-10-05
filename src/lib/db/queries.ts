@@ -41,5 +41,31 @@ export let getUserFromDb = (email: string) => {
     where: {
       email,
     },
+    include: {
+      balances: true,
+      budgets: true,
+      transactions: true,
+      pots: true,
+    },
   });
 };
+
+// export let getUserFromDb = unstable_cache(
+//   async (email: string) => {
+//     return prisma.user.findFirst({
+//       where: {
+//         email,
+//       },
+//       include: {
+//         balances: true,
+//         budgets: true,
+//         transactions: true,
+//         pots: true,
+//       },
+
+//       distinct: ["password"],
+//     });
+//   },
+//   ["user-by-email"],
+//   { tags: ["users"] }
+// );

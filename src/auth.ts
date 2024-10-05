@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/db/prisma";
-import { signInSchema } from "./lib/db/validaton";
+import { signInSchema } from "./lib/validaton";
 import { ZodError } from "zod";
 import { getUserFromDb } from "./lib/db/queries";
 import { Adapter } from "next-auth/adapters";

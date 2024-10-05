@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import ModalProvider from "@/components/modals/modal-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,6 +34,7 @@ export default function RootLayout({
       >
         <SessionProvider>
           <Toaster />
+          <ModalProvider />
           {children}
         </SessionProvider>
       </body>

@@ -20,7 +20,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ isMinimized }) => {
       )}
     >
       <span className="text-lg font-semibold text-secondary">
-        {!isMinimized && "Welcome,"} {session?.user?.name.split(" ")[0]}
+        {session?.user?.name.split(" ")[0]}
       </span>
       <Button
         onClick={() => signOut()}

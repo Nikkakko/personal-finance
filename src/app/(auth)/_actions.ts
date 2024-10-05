@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/db/prisma";
-import { signUpSchema, SignUpType } from "@/lib/db/validaton";
+import { signUpSchema, SignUpType } from "@/lib/validaton";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 

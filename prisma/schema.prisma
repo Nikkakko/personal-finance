@@ -40,9 +40,9 @@ generator client {
 
 model Balance {
   id        String   @id @default(cuid())
-  current   Float
-  income    Float
-  expenses  Float
+  current   Float @default(0)
+  income    Float @default(0)
+  expenses  Float @default(0)
 
   // Relationships
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)

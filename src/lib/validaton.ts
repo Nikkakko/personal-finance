@@ -30,13 +30,8 @@ export type SignUpType = z.infer<typeof signUpSchema>;
 //export signIn type
 export type SignInType = z.infer<typeof signInSchema>;
 
-export type FormState =
-  | {
-      errors?: {
-        name?: string[];
-        email?: string[];
-        password?: string[];
-      };
-      message?: string;
-    }
-  | undefined;
+//add current balance, income, expenses
+export const addBalanceSchema = z.object({
+  current: z.string().min(1, "Current balance is required"),
+  income: z.string().min(1, "Income is required"),
+});
