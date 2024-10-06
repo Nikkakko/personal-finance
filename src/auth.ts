@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@/lib/db/prisma";
+import { prismaDb } from "@/lib/db/prisma";
 import { signInSchema } from "./lib/validaton";
 import { ZodError } from "zod";
 import { getUserFromDb } from "./lib/db/queries";
@@ -10,7 +10,7 @@ import { Adapter } from "next-auth/adapters";
 import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: PrismaAdapter(prisma) as Adapter,
+  adapter: PrismaAdapter(prismaDb) as Adapter,
   providers: [
     Credentials({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.

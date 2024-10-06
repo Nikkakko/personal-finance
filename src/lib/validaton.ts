@@ -1,3 +1,4 @@
+import { Category, TransactionType } from "@prisma/client";
 import { object, string } from "zod";
 import * as z from "zod";
 
@@ -31,7 +32,74 @@ export type SignUpType = z.infer<typeof signUpSchema>;
 export type SignInType = z.infer<typeof signInSchema>;
 
 //add current balance, income, expenses
-export const addBalanceSchema = z.object({
-  current: z.string().min(1, "Current balance is required"),
-  income: z.string().min(1, "Income is required"),
+export const addTransactionSchema = z.object({
+  amount: z.string().min(1, "Amount is required"),
+  description: z.string().optional(),
+  createdAt: z.date().optional(),
+  isRecurring: z.boolean().default(false),
+  category: z.nativeEnum(Category, {
+    errorMap: (issue, ctx) => ({ message: "Please select a valid category" }),
+  }),
+  type: z.nativeEnum(TransactionType, {
+    errorMap: (issue, ctx) => ({
+      message: "Please select a valid transaction type",
+    }),
+  }),
 });
+
+export const transactionsSelect = [
+  {
+    id: "1",
+    name: "Income",
+    value: TransactionType.INCOME,
+  },
+
+  {
+    id: "2",
+    name: "Expense",
+    value: TransactionType.EXPENSE,
+  },
+];
+
+export const categoriesSelect = [
+  {
+    id: "1",
+    name: "Food",
+    value: Category.FOOD,
+  },
+  {
+    id: "2",
+    name: "Transport",
+    value: Category.TRANSPORT,
+  },
+  {
+    id: "3",
+    name: "Entertainment",
+    value: Category.ENTERTAINMENT,
+  },
+  {
+    id: "4",
+    name: "Health",
+    value: Category.HEALTH,
+  },
+  {
+    id: "5",
+    name: "Education",
+    value: Category.EDUCATION,
+  },
+  {
+    id: "6",
+    name: "Shopping",
+    value: Category.SHOPPING,
+  },
+  {
+    id: "7",
+    name: "Bills",
+    value: Category.BILLS,
+  },
+  {
+    id: "8",
+    name: "Others",
+    value: Category.OTHER,
+  },
+];

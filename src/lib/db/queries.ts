@@ -1,5 +1,5 @@
 import { unstable_cache, revalidateTag } from "next/cache";
-import { prisma } from "./prisma";
+import { prismaDb } from "./prisma";
 
 /* 
 export let getAllSongs = unstable_cache(
@@ -14,7 +14,7 @@ export let getAllSongs = unstable_cache(
 
 export let getAllTransactions = unstable_cache(
   async () => {
-    return prisma.transaction.findMany({
+    return prismaDb.transaction.findMany({
       orderBy: {
         createdAt: "desc",
       },
@@ -26,7 +26,7 @@ export let getAllTransactions = unstable_cache(
 
 export let getTransactionById = unstable_cache(
   async (id: string) => {
-    return prisma.transaction.findFirst({
+    return prismaDb.transaction.findFirst({
       where: {
         id,
       },
@@ -37,12 +37,12 @@ export let getTransactionById = unstable_cache(
 );
 
 export let getUserFromDb = (email: string) => {
-  return prisma.user.findFirst({
+  return prismaDb.user.findFirst({
     where: {
       email,
     },
     include: {
-      balances: true,
+      balance: true,
       budgets: true,
       transactions: true,
       pots: true,
@@ -69,3 +69,27 @@ export let getUserFromDb = (email: string) => {
 //   ["user-by-email"],
 //   { tags: ["users"] }
 // );
+
+export let getUserTransactions = unstable_cache(
+  async (email: string) => {
+    const user = await prismaDb.user.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) return null;
+
+    return prismaDb.transaction.findMany({
+      where: {
+        userId: user.id,
+      },
+
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+  },
+  ["user-transactions"],
+  { tags: ["transactions"] }
+);

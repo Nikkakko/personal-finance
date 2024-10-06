@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/db/prisma";
+import { prismaDb } from "@/lib/db/prisma";
 import { signUpSchema, SignUpType } from "@/lib/validaton";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
@@ -23,7 +23,7 @@ export async function signup(values: SignUpType) {
     // e.g. Hash the user's password before storing it
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const userExists = await prisma.user.findUnique({
+    const userExists = await prismaDb.user.findUnique({
       where: { email },
     });
 
@@ -32,7 +32,7 @@ export async function signup(values: SignUpType) {
     }
 
     // 3. Insert the user into the database or call an Auth Library's API
-    await prisma.user.create({
+    await prismaDb.user.create({
       data: {
         name,
         email,

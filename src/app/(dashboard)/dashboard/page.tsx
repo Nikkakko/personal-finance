@@ -1,6 +1,11 @@
 import { auth, signOut } from "@/auth";
-import AddBalanceButton from "@/components/AddBalanceButton";
+import AddBalanceButton from "@/components/AddTransaction";
+import Budgets from "@/components/Budgets";
+import PageTitle from "@/components/PageTitle";
 import PersonalFinanceCard from "@/components/PersonalFinanceCard";
+import Pots from "@/components/Pots";
+import RecurringBills from "@/components/RecurringBills";
+import Transactions from "@/components/Transactions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getUserFromDb } from "@/lib/db/queries";
 
@@ -21,30 +26,33 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
   const dbUser = await getUserFromDb(session?.user.email);
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-semibold text-primary">Overview</h1>
+        <PageTitle title="Overview" />
         {/* add your balance */}
-        <AddBalanceButton
-          userBalance={dbUser?.balances[0]}
-          userEmail={session?.user.email}
-        />
+        <AddBalanceButton userEmail={session?.user.email} />
       </div>
 
-      {/* current,balance, income, expenses */}
       <React.Suspense
         fallback={
-          <div className="flex justify-center items-center h-96">
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
+          <div className="flex items-center gap-6 mt-6 ">
+            <Skeleton className="w-full h-40" />
+            <Skeleton className="w-full h-40" />
+            <Skeleton className="w-full h-40" />
           </div>
         }
       >
         <section className="mt-6">
-          <PersonalFinanceCard userBalance={dbUser?.balances[0]} />
+          <PersonalFinanceCard userBalance={dbUser?.balance} />
         </section>
       </React.Suspense>
+
+      <section className="grid grid-cols-5 grid-rows-7 gap-4 mt-8">
+        <Pots className="col-span-3 row-span-2" />
+        <Transactions className="col-span-3 row-span-5 col-start-1 row-start-3" />
+        <Budgets className="col-span-2 row-span-4 col-start-4 row-start-1" />
+        <RecurringBills className="col-span-2 row-span-3 col-start-4 row-start-5" />
+      </section>
     </div>
   );
 };

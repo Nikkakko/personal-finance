@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useEffect, useState } from "react";
-import AddBalance from "@/components/modals/add-balance";
+import AddBalance from "@/components/modals/add-transaction";
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);

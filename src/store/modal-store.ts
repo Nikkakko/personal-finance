@@ -8,12 +8,7 @@ type modalType =
 
 interface ModalData {
   isEdit?: boolean;
-  balance?: {
-    current: number;
-    income: number;
-    id: string;
-    userEmail: string;
-  };
+  userEmail?: string;
 }
 
 interface ModalStore {

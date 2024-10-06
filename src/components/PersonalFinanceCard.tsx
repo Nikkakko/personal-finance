@@ -11,7 +11,7 @@ import {
 import { cn, formatCurrency } from "@/lib/utils";
 
 interface PersonalFinanceCardProps {
-  userBalance: Balance | undefined;
+  userBalance: Balance | null | undefined;
 }
 
 const PersonalFinanceCard: React.FC<PersonalFinanceCardProps> = ({

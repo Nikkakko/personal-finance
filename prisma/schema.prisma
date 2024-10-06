@@ -12,6 +12,11 @@ datasource db {
 
 
 
+generator client {
+  provider = "prisma-client-js"
+}
+
+
 
 
 enum Theme {
@@ -32,9 +37,22 @@ enum Theme {
   ORANGE       @map("#BE6C49")
 }
 
-generator client {
-  provider = "prisma-client-js"
+enum TransactionType {
+  INCOME
+  EXPENSE
 }
+
+enum Category {
+  FOOD
+  TRANSPORT
+  SHOPPING
+  BILLS
+  ENTERTAINMENT
+  EDUCATION
+  HEALTH
+  OTHER
+}
+
 
 
 
@@ -46,7 +64,9 @@ model Balance {
 
   // Relationships
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
+  userId    String @unique
+
+  
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -54,12 +74,16 @@ model Balance {
 
 model Transaction {
   id        String   @id @default(cuid())
-  avatar    String
-  name      String
-  category  String
+
+  category  Category
   date      DateTime
   amount    Float
   recurring Boolean
+
+
+  type      TransactionType 
+  description String?
+ 
 
   // Relationships
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -71,7 +95,7 @@ model Transaction {
 
 model Budget {
   id       String @id @default(cuid())
-  category String
+  category Category
   maximum  Float
   theme   Theme
 
@@ -113,7 +137,7 @@ model User {
   Authenticator Authenticator[]
 
   // Relationships
-  balances      Balance[]
+  balance      Balance?
   transactions  Transaction[]
   budgets       Budget[]
   pots          Pot[]
