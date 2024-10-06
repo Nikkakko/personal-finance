@@ -72,7 +72,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({}) => {
         values,
       });
 
-      if (res?.message === "Balance updated successfully") {
+      if (res?.message === "Transaction added successfully") {
         closeModal();
         form.reset();
       }
