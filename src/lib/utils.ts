@@ -12,13 +12,21 @@ export async function hashPassword(password: string) {
   return hashedPassword;
 }
 
-export function formatCurrency(amount: number = 0) {
-  const newAmount = new Intl.NumberFormat("en-US", {
+export function formatCurrency(
+  amount: number = 0,
+  options: Intl.NumberFormatOptions = {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 2,
     minimumIntegerDigits: 2,
-  }).format(amount);
+  }
+) {
+  const newAmount = new Intl.NumberFormat("en-US", options).format(amount);
 
   return newAmount;
+}
+
+//capitilze function
+export function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }

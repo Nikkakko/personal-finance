@@ -1,4 +1,4 @@
-import { Category, TransactionType } from "@prisma/client";
+import { Category, Theme, TransactionType } from "@prisma/client";
 import { object, string } from "zod";
 import * as z from "zod";
 
@@ -47,59 +47,14 @@ export const addTransactionSchema = z.object({
   }),
 });
 
-export const transactionsSelect = [
-  {
-    id: "1",
-    name: "Income",
-    value: TransactionType.INCOME,
-  },
-
-  {
-    id: "2",
-    name: "Expense",
-    value: TransactionType.EXPENSE,
-  },
-];
-
-export const categoriesSelect = [
-  {
-    id: "1",
-    name: "Food",
-    value: Category.FOOD,
-  },
-  {
-    id: "2",
-    name: "Transport",
-    value: Category.TRANSPORT,
-  },
-  {
-    id: "3",
-    name: "Entertainment",
-    value: Category.ENTERTAINMENT,
-  },
-  {
-    id: "4",
-    name: "Health",
-    value: Category.HEALTH,
-  },
-  {
-    id: "5",
-    name: "Education",
-    value: Category.EDUCATION,
-  },
-  {
-    id: "6",
-    name: "Shopping",
-    value: Category.SHOPPING,
-  },
-  {
-    id: "7",
-    name: "Bills",
-    value: Category.BILLS,
-  },
-  {
-    id: "8",
-    name: "Others",
-    value: Category.OTHER,
-  },
-];
+export const addBudgetSchema = z.object({
+  category: z.nativeEnum(Category, {
+    errorMap: (issue, ctx) => ({ message: "Please select a valid category" }),
+  }),
+  maximum: z.string().min(1, "Maximum is required").regex(/^\d+$/, {
+    message: "Maximum must be a number",
+  }),
+  theme: z.nativeEnum(Theme, {
+    errorMap: (issue, ctx) => ({ message: "Please select a valid theme" }),
+  }),
+});

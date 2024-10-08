@@ -54,20 +54,20 @@ const sidebarItems = [
 
 const Sidebar: React.FC<SidebarProps> = ({}) => {
   const pathname = usePathname();
-  const [isMinimized, setIsMinimized] = React.useState(false);
+  const [isCollapsed, setIsCollapsed] = React.useState(false);
 
   return (
     <aside
       className={cn(
-        "w-full max-w-[300px] bg-primary  flex-col py-10 transition-all hidden lg:flex",
-        isMinimized ? "w-24" : "w-full"
+        "max-w-[300px] bg-primary  flex-col py-10 transition-all hidden lg:flex w-full",
+        isCollapsed ? "w-24" : "w-full"
       )}
     >
       <Link
         href="/"
-        className={cn("px-8 py-4 ", isMinimized && "mx-auto justify-center")}
+        className={cn("px-8 py-4 ", isCollapsed && "mx-auto justify-center")}
       >
-        {isMinimized ? <Icons.logoSmall /> : <Icons.logoLarge />}
+        {isCollapsed ? <Icons.logoSmall /> : <Icons.logoLarge />}
       </Link>
 
       <nav className="flex flex-col mt-10">
@@ -83,7 +83,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
                 isActive
                   ? "bg-secondary text-primary rounded-md"
                   : "text-secondary hover:text-secondary/80 hover:rounded-md transition-all",
-                isMinimized && "justify-center mx-auto"
+                isCollapsed && " mx-auto"
               )}
             >
               {
@@ -94,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
                   )}
                 />
               }
-              {!isMinimized && <span>{item.name}</span>}
+              {!isCollapsed && <span>{item.name}</span>}
             </Link>
           );
         })}
@@ -104,10 +104,10 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
       <button
         className="mt-auto py-4 px-8 w-full group transition-all"
         type="button"
-        onClick={() => setIsMinimized(prev => !prev)}
+        onClick={() => setIsCollapsed(prev => !prev)}
       >
         <div className="flex items-center gap-4">
-          {!isMinimized ? (
+          {!isCollapsed ? (
             <>
               <ArrowLeftFromLine className="text-secondary group-hover:text-secondary/80" />
               <span className="text-secondary">Minimize Menu</span>
@@ -118,7 +118,7 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
         </div>
       </button>
 
-      <UserProfile isMinimized={isMinimized} />
+      <UserProfile isCollapsed={isCollapsed} />
     </aside>
   );
 };

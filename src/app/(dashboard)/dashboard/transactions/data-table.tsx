@@ -55,7 +55,7 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  const queryTransactionsParams = searchParams.get("queryTransactions");
+  const queryTransactionsParams = searchParams.get("quryT");
 
   React.useEffect(() => {
     if (queryTransactionsParams) {
@@ -69,11 +69,13 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <SearchField
-        placeholder="Search transactions"
-        className="mb-6 max-w-sm"
-        query={"queryTransactions"}
-      />
+      <React.Suspense>
+        <SearchField
+          placeholder="Search transactions"
+          className="mb-6 max-w-sm"
+          query={"quryT"}
+        />
+      </React.Suspense>
 
       <div className="rounded-md border">
         <Table>

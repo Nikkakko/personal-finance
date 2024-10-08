@@ -1,3 +1,4 @@
+import { Budget } from "@prisma/client";
 import { create } from "zustand";
 type modalType =
   | "budget"
@@ -9,6 +10,7 @@ type modalType =
 interface ModalData {
   isEdit?: boolean;
   userEmail?: string;
+  budget?: Budget;
 }
 
 interface ModalStore {

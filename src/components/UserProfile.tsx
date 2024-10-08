@@ -6,17 +6,17 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 
 interface UserProfileProps {
-  isMinimized: boolean;
+  isCollapsed: boolean;
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({ isMinimized }) => {
+const UserProfile: React.FC<UserProfileProps> = ({ isCollapsed }) => {
   const { data: session } = useSession();
 
   return (
     <div
       className={cn(
         "px-8 flex flex-col gap-1",
-        isMinimized && "items-center justify-center"
+        isCollapsed && "items-center justify-center"
       )}
     >
       <span className="text-lg font-semibold text-secondary">
@@ -27,11 +27,11 @@ const UserProfile: React.FC<UserProfileProps> = ({ isMinimized }) => {
         variant="destructive"
         className={cn(
           "flex items-center gap-1",
-          isMinimized && "justify-center"
+          isCollapsed && "justify-center"
         )}
       >
         <LogOutIcon className="w-6" />
-        {!isMinimized && (
+        {!isCollapsed && (
           <span className="text-secondary font-bold">Log Out</span>
         )}
       </Button>

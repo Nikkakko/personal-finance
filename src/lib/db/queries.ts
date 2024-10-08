@@ -1,5 +1,6 @@
 import { unstable_cache, revalidateTag } from "next/cache";
 import { prismaDb } from "./prisma";
+import { auth } from "@/auth";
 
 /* 
 export let getAllSongs = unstable_cache(
@@ -93,3 +94,33 @@ export let getUserTransactions = unstable_cache(
   ["user-transactions"],
   { tags: ["transactions"] }
 );
+
+export let getUserBudgets = async () => {
+  const session = await auth();
+  if (!session) return null;
+  const user = await prismaDb.user.findFirst({
+    where: {
+      email: session?.user.email,
+    },
+  });
+
+  if (!user) return null;
+
+  return prismaDb.budget.findMany({
+    where: {
+      userId: user.id,
+    },
+
+    orderBy: {
+      createdAt: "asc",
+    },
+
+    include: {
+      user: {
+        select: {
+          transactions: true,
+        },
+      },
+    },
+  });
+};

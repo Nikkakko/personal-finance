@@ -4,22 +4,21 @@ import { revalidatePath } from "next/cache";
 import { prismaDb } from "../db/prisma";
 import { addTransactionSchema } from "../validaton";
 import * as z from "zod";
+import { auth } from "@/auth";
 
 export async function addTransactionAction({
-  email,
   values,
 }: {
-  email: string | undefined;
   values: z.infer<typeof addTransactionSchema>;
 }) {
-  if (!email) {
-    return { success: false, message: "User email is required" };
-  }
+  const session = await auth();
+  if (!session) return { message: "User not found" };
+
   try {
     await prismaDb.$transaction(async prisma => {
       const findUser = await prisma.user.findUnique({
         where: {
-          email: email,
+          email: session?.user.email,
         },
 
         include: {
@@ -41,7 +40,7 @@ export async function addTransactionAction({
           recurring: values.isRecurring,
           user: {
             connect: {
-              email: email,
+              email: session?.user.email,
             },
           },
         },

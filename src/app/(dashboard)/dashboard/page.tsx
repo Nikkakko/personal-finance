@@ -30,7 +30,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
       <div className="flex items-center justify-between">
         <PageTitle title="Overview" />
         {/* add your balance */}
-        <AddBalanceButton userEmail={session?.user.email} />
+        <AddBalanceButton />
       </div>
 
       <React.Suspense

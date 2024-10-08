@@ -2,6 +2,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import AddBalance from "@/components/modals/add-transaction";
+import AddBudgets from "./add-budgets";
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -15,6 +16,7 @@ const ModalProvider = () => {
   return (
     <>
       <AddBalance />
+      <AddBudgets />
     </>
   );
 };
