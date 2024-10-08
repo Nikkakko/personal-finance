@@ -10,10 +10,12 @@ export default function SearchField({
   placeholder,
   className,
   query,
+  defaultValue,
 }: {
   query: string;
   placeholder: string;
   className?: string;
+  defaultValue: string | null;
 }) {
   const { replace } = useRouter();
   const pathname = usePathname();
@@ -38,7 +40,7 @@ export default function SearchField({
         onChange={e => {
           handleSearch(e.target.value);
         }}
-        defaultValue={searchParams.get("query")?.toString()}
+        defaultValue={defaultValue || ""}
       />
       <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
     </form>

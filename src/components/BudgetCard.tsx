@@ -4,7 +4,7 @@ import { capitalize, cn, formatCurrency } from "@/lib/utils";
 import { Budget, Transaction } from "@prisma/client";
 import * as React from "react";
 import { Button } from "./ui/button";
-import { EllipsisIcon } from "lucide-react";
+import { ArrowRightIcon, EllipsisIcon } from "lucide-react";
 import { Progress } from "./ui/progress";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { deleteBudgetAction } from "@/lib/actions/add-budget-action";
 import { useModalStore } from "@/store/modal-store";
+import { useRouter } from "next/navigation";
 
 interface BudgetCardProps {
   budget: Budget & {
@@ -32,12 +33,16 @@ interface BudgetCardProps {
 const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
   const [isPending, startTransition] = React.useTransition();
   const { openModal } = useModalStore();
+  const router = useRouter();
 
   //transactions = budget.user.transactions
   const transactions = budget.user.transactions;
 
   const calculateCategorySpent = transactions.reduce((acc, transaction) => {
-    if (transaction.category === budget.category) {
+    if (
+      transaction.category === budget.category &&
+      transaction.type === "EXPENSE"
+    ) {
       acc += transaction.amount;
     }
     return acc;
@@ -96,7 +101,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
                     </AlertDialogTitle>
                     <AlertDialogDescription>
                       This action cannot be undone. This will permanently delete{" "}
-                      {`"${budget.category}"`} budget.
+                      {`"${capitalize(budget.category)}"`} budget.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
@@ -165,6 +170,65 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
           ))}
         </div>
       </div>
+
+      {/* latest spendings */}
+
+      {transactions
+        .filter(
+          transaction =>
+            transaction.category === budget.category &&
+            transaction.type === "EXPENSE"
+        )
+        .slice(0, 3).length === 0 ? null : (
+        <div className="mt-5 bg-background rounded shadow-sm p-5">
+          <div className="flex items-center justify-between w-full">
+            <h3 className="text-lg font-semibold">Latest Spendings</h3>
+            {/* see all */}
+            <Button
+              variant="ghost"
+              className="px-0 hover:px-4 transition-all "
+              onClick={() => {
+                router.push(
+                  `/dashboard/transactions?queryT=${budget.category.toLowerCase()}`
+                );
+              }}
+            >
+              See All <ArrowRightIcon className="w-4 h-4 ml-1 text-primary" />
+            </Button>
+          </div>
+          <div className="flex flex-col gap-3 mt-3">
+            {transactions
+              .filter(transaction => transaction.category === budget.category)
+              .slice(0, 3)
+              .map(transaction => (
+                <div
+                  key={transaction.id}
+                  className="flex items-center justify-between w-full"
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={cn("w-2 h-8 rounded")}
+                      style={{
+                        backgroundColor: themeColorMap[budget.theme],
+                      }}
+                    />
+                    <p className="text-sm text-muted-foreground">
+                      {transaction.description}
+                    </p>
+                  </div>
+                  <p className="text-sm font-semibold">
+                    {formatCurrency(transaction.amount, {
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                      currency: "USD",
+                      style: "currency",
+                    })}
+                  </p>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

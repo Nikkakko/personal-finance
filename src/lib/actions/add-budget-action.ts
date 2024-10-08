@@ -35,31 +35,23 @@ export async function addBudgetAction({
           userId: findUser.id,
           category: values.category,
         },
-
-        select: {
-          id: true,
-        },
       });
 
-      await prisma.budget.upsert({
-        where: {
-          id: budget?.id,
-        },
-        update: {
+      if (budget) {
+        return { message: "Budget already exists" };
+      }
+
+      // create budget
+      await prisma.budget.create({
+        data: {
+          category: values.category,
           maximum: parseFloat(values.maximum),
           theme: values.theme,
-          category: values.category,
-        },
-        create: {
-          maximum: parseFloat(values.maximum),
-          theme: values.theme,
-          category: values.category,
           userId: findUser.id,
         },
       });
 
       revalidatePath("/dashboard/budgets");
-
       return { message: "Budget added successfully" };
     });
   } catch (error) {
@@ -106,5 +98,64 @@ export async function deleteBudgetAction({ id }: { id: string }) {
     revalidatePath("/dashboard/budgets");
   } catch (error) {
     return { message: "Failed to delete budget" };
+  }
+}
+
+// edit single budget
+export async function editBudgetAction({
+  values,
+  budgetId,
+}: {
+  budgetId: string;
+  values: z.infer<typeof addBudgetSchema>;
+}) {
+  const session = await auth();
+  if (!session) return { message: "User not found" };
+
+  try {
+    return await prismaDb.$transaction(async prisma => {
+      const findUser = await prisma.user.findUnique({
+        where: {
+          email: session?.user.email,
+        },
+        include: {
+          budgets: true,
+        },
+      });
+
+      if (!findUser) {
+        return { message: "User not found" };
+      }
+
+      const budget = await prisma.budget.findUnique({
+        where: {
+          id: budgetId,
+        },
+      });
+
+      if (!budget) {
+        return { message: "Budget not found" };
+      }
+
+      if (budget.userId !== findUser.id) {
+        return { message: "You don't have permission to edit this budget" };
+      }
+
+      await prisma.budget.update({
+        where: {
+          id: budgetId,
+        },
+        data: {
+          category: values.category,
+          maximum: parseFloat(values.maximum),
+          theme: values.theme,
+        },
+      });
+
+      revalidatePath("/dashboard/budgets");
+      return { message: "Budget updated successfully" };
+    });
+  } catch (error) {
+    return { message: "Failed to edit budget" };
   }
 }

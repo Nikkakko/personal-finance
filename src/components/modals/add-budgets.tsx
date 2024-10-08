@@ -25,8 +25,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { addTransactionAction } from "@/lib/actions/add-transaction-action";
-import { Textarea } from "../ui/textarea";
 import {
   Select,
   SelectContent,
@@ -35,7 +33,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { addBudgetAction } from "@/lib/actions/add-budget-action";
+import {
+  addBudgetAction,
+  editBudgetAction,
+} from "@/lib/actions/add-budget-action";
 import { categoriesSelect, themeSelect } from "@/lib/constants";
 import { useToast } from "@/hooks/use-toast";
 
@@ -60,6 +61,21 @@ const AddBudgets: React.FC<AddBudgetsProps> = ({}) => {
   // 2. Define your submit handler.
   const onSubmit = form.handleSubmit(data => {
     startTransition(async () => {
+      if (modalData?.isEdit && modalData?.budget) {
+        const res = await editBudgetAction({
+          values: data,
+          budgetId: modalData.budget.id,
+        });
+        if (res?.message === "Budget updated successfully") {
+          toast({
+            title: "Budget updated",
+          });
+          closeModal();
+          form.reset();
+        }
+        return;
+      }
+
       const res = await addBudgetAction({
         values: data,
       });
@@ -74,7 +90,7 @@ const AddBudgets: React.FC<AddBudgetsProps> = ({}) => {
       if (res?.message === "Budget added successfully") {
         //toast based on edit
         toast({
-          title: modalData?.isEdit ? "Budget updated" : "Budget added",
+          title: "Budget added",
         });
         closeModal();
         form.reset();

@@ -3,12 +3,15 @@ import BudgetCard from "@/components/BudgetCard";
 import BudgetSummary from "@/components/BudgetSummary";
 import PageTitle from "@/components/PageTitle";
 import { getUserBudgets } from "@/lib/db/queries";
+import { BudgetWithUser } from "@/types";
 import * as React from "react";
 
 interface BudgetsPageProps {}
 
 const BudgetsPage: React.FC<BudgetsPageProps> = async ({}) => {
-  const budgets = await getUserBudgets();
+  const budgets = (await getUserBudgets()) as BudgetWithUser[];
+
+  if (!budgets) return null;
 
   return (
     <div className="flex flex-col ">
@@ -18,7 +21,7 @@ const BudgetsPage: React.FC<BudgetsPageProps> = async ({}) => {
       </div>
 
       <section className="mt-10 flex flex-row gap-6">
-        <BudgetSummary />
+        <BudgetSummary budgets={budgets} />
         {/* <BudgetCard /> */}
         <div className="flex flex-col gap-6 w-full">
           {budgets?.map(budget => (
