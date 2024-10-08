@@ -1,16 +1,19 @@
-import { Budget } from "@prisma/client";
+import { Budget, Pot } from "@prisma/client";
 import { create } from "zustand";
 type modalType =
   | "budget"
   | "transaction"
   | "pots"
   | "recurring-bills"
-  | "balance";
+  | "balance"
+  | "pot";
 
 interface ModalData {
   isEdit?: boolean;
   userEmail?: string;
   budget?: Budget;
+  pot?: Pot;
+  potType?: "add-money" | "withdraw-money";
 }
 
 interface ModalStore {

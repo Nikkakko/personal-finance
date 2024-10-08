@@ -15,7 +15,7 @@ export async function addTransactionAction({
   if (!session) return { message: "User not found" };
 
   try {
-    await prismaDb.$transaction(async prisma => {
+    return await prismaDb.$transaction(async prisma => {
       const findUser = await prisma.user.findUnique({
         where: {
           email: session?.user.email,
@@ -23,11 +23,20 @@ export async function addTransactionAction({
 
         include: {
           balance: true,
+          budgets: true,
         },
       });
 
       if (!findUser) {
         return { message: "User not found" };
+      }
+
+      const budget = findUser.budgets.find(
+        budget => budget.category === values.category
+      );
+
+      if (budget && parseFloat(values.amount) > budget.maximum) {
+        return { message: "Transaction amount exceeds budget maximum" };
       }
 
       await prisma.transaction.create({
@@ -102,10 +111,10 @@ export async function addTransactionAction({
           },
         });
       }
-    });
-    revalidatePath("/dashboard");
 
-    return { message: "Transaction added successfully" };
+      revalidatePath("/dashboard");
+      return { message: "Transaction added successfully" };
+    });
   } catch (error) {
     console.error(error);
     return { message: "An error occurred while upserting the balance" };

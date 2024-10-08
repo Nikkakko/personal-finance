@@ -58,3 +58,20 @@ export const addBudgetSchema = z.object({
     errorMap: (issue, ctx) => ({ message: "Please select a valid theme" }),
   }),
 });
+
+//export addPots
+export const addPotSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  target: z.string().min(1, "Target is required").regex(/^\d+$/, {
+    message: "Target must be a number",
+  }),
+  theme: z.nativeEnum(Theme, {
+    errorMap: (issue, ctx) => ({ message: "Please select a valid theme" }),
+  }),
+});
+
+export const potActionSchema = z.object({
+  amount: z.string().min(1, "Amount is required").regex(/^\d+$/, {
+    message: "Amount must be a number",
+  }),
+});

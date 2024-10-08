@@ -40,6 +40,7 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { Checkbox } from "../ui/checkbox";
 import { categoriesSelect, transactionsSelect } from "@/lib/constants";
+import { useToast } from "@/hooks/use-toast";
 
 interface AddTransactionProps {}
 
@@ -47,6 +48,7 @@ const AddTransaction: React.FC<AddTransactionProps> = ({}) => {
   const { modal, closeModal, modalData } = useModalStore();
   const [isPending, startTransition] = React.useTransition();
   const isOpen = modal === "balance" ? true : false;
+  const { toast } = useToast();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof addTransactionSchema>>({
@@ -68,7 +70,16 @@ const AddTransaction: React.FC<AddTransactionProps> = ({}) => {
         values,
       });
 
+      if (res?.message === "Transaction amount exceeds budget maximum") {
+        toast({
+          title: "Transaction amount exceeds budget maximum",
+        });
+      }
+
       if (res?.message === "Transaction added successfully") {
+        toast({
+          title: "Transaction added",
+        });
         closeModal();
         form.reset();
       }

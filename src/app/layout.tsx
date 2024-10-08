@@ -1,19 +1,13 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import ModalProvider from "@/components/modals/modal-provider";
+import { Public_Sans } from "next/font/google";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const publicSans = Public_Sans({
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -29,9 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
-      >
+      <body className={` ${publicSans.className} antialiased `}>
         <SessionProvider>
           <Toaster />
           <ModalProvider />

@@ -3,6 +3,8 @@ import React from "react";
 import { useEffect, useState } from "react";
 import AddBalance from "@/components/modals/add-transaction";
 import AddBudgets from "./add-budgets";
+import AddPots from "./add-pots";
+import PotActinos from "./pot-actions";
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -17,6 +19,8 @@ const ModalProvider = () => {
     <>
       <AddBalance />
       <AddBudgets />
+      <AddPots />
+      <PotActinos />
     </>
   );
 };

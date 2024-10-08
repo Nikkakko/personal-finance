@@ -124,3 +124,25 @@ export let getUserBudgets = async () => {
     },
   });
 };
+
+export let getUserPots = async () => {
+  const session = await auth();
+  if (!session) return null;
+  const user = await prismaDb.user.findFirst({
+    where: {
+      email: session?.user.email,
+    },
+  });
+
+  if (!user) return null;
+
+  return prismaDb.pot.findMany({
+    where: {
+      userId: user.id,
+    },
+
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+};

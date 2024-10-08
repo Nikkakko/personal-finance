@@ -21,6 +21,7 @@ import {
 import { deleteBudgetAction } from "@/lib/actions/add-budget-action";
 import { useModalStore } from "@/store/modal-store";
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 
 interface BudgetCardProps {
   budget: Budget & {
@@ -60,7 +61,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
   ];
 
   return (
-    <div className="flex flex-col p-8 bg-secondary shadow-sm">
+    <div className="flex flex-col p-2 lg:p-8 bg-secondary shadow-sm">
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-3">
           <div
@@ -73,7 +74,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
         </div>
 
         <Popover>
-          <PopoverTrigger>
+          <PopoverTrigger className="active:scale-95">
             <EllipsisIcon />
           </PopoverTrigger>
           <PopoverContent className="max-w-[150px]">
@@ -144,7 +145,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
           indicatorColor={themeColorMap[budget.theme]}
         />
 
-        <div className="flex items-center justify-between w-1/2 ">
+        <div className="flex items-center justify-between w-full lg:w-1/2 ">
           {spentRemainingList.map((item, index) => (
             <div key={index} className="flex gap-2">
               <div
@@ -216,14 +217,21 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
                       {transaction.description}
                     </p>
                   </div>
-                  <p className="text-sm font-semibold">
-                    {formatCurrency(transaction.amount, {
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0,
-                      currency: "USD",
-                      style: "currency",
-                    })}
-                  </p>
+                  {/* date */}
+                  <div className="flex flex-col items-end gap-2">
+                    <p className="text-sm font-semibold">
+                      -
+                      {formatCurrency(transaction.amount, {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
+                        currency: "USD",
+                        style: "currency",
+                      })}
+                    </p>
+                    <p className="text-muted-foreground text-end">
+                      {format(transaction.date, "dd MMM yyyy")}
+                    </p>
+                  </div>
                 </div>
               ))}
           </div>

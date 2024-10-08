@@ -76,7 +76,7 @@ const BudgetSummary: React.FC<BudgetSummaryProps> = ({ budgets }) => {
   }, [chartBudgetData]);
 
   return (
-    <div className="w-full max-w-xl">
+    <div className="w-full lg:max-w-xl">
       <Card className="flex flex-col">
         <CardContent className="flex-1 pb-0">
           <ChartContainer
