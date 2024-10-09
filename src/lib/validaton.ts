@@ -1,4 +1,4 @@
-import { Category, Theme, TransactionType } from "@prisma/client";
+import { Category, Frequency, Theme, TransactionType } from "@prisma/client";
 import { object, string } from "zod";
 import * as z from "zod";
 
@@ -36,7 +36,6 @@ export const addTransactionSchema = z.object({
   amount: z.string().min(1, "Amount is required"),
   description: z.string().optional(),
   createdAt: z.date().optional(),
-  isRecurring: z.boolean().default(false),
   category: z.nativeEnum(Category, {
     errorMap: (issue, ctx) => ({ message: "Please select a valid category" }),
   }),
@@ -74,4 +73,22 @@ export const potActionSchema = z.object({
   amount: z.string().min(1, "Amount is required").regex(/^\d+$/, {
     message: "Amount must be a number",
   }),
+});
+
+export const addRecurringBillSchema = z.object({
+  title: z.string().min(1, "Name is required"),
+  amount: z.string().min(1, "Amount is required").regex(/^\d+$/, {
+    message: "Amount must be a number",
+  }),
+  dueDate: z.date(),
+  isPaid: z.boolean().default(false),
+  frequency: z.nativeEnum(Frequency, {
+    errorMap: (issue, ctx) => ({ message: "Please select a valid frequency" }),
+  }),
+  description: z.string().optional(),
+  category: z
+    .nativeEnum(Category, {
+      errorMap: (issue, ctx) => ({ message: "Please select a valid category" }),
+    })
+    .optional(),
 });

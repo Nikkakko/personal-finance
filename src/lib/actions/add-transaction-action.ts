@@ -46,7 +46,6 @@ export async function addTransactionAction({
           date: values.createdAt || new Date(),
           category: values.category,
           type: values.type,
-          recurring: values.isRecurring,
           user: {
             connect: {
               email: session?.user.email,

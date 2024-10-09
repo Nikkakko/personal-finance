@@ -14,6 +14,12 @@ export async function addBudgetAction({
   const session = await auth();
   if (!session) return { message: "User not found" };
 
+  //validate values
+  const validationResult = addBudgetSchema.safeParse(values);
+  if (!validationResult.success) {
+    return { message: validationResult.error.errors[0] };
+  }
+
   try {
     return await prismaDb.$transaction(async prisma => {
       const findUser = await prisma.user.findUnique({
@@ -33,7 +39,7 @@ export async function addBudgetAction({
       const budget = await prisma.budget.findFirst({
         where: {
           userId: findUser.id,
-          category: values.category,
+          category: validationResult.data.category,
         },
       });
 
@@ -46,9 +52,9 @@ export async function addBudgetAction({
       // create budget
       await prisma.budget.create({
         data: {
-          category: values.category,
-          maximum: parseFloat(values.maximum),
-          theme: values.theme,
+          category: validationResult.data.category,
+          maximum: parseFloat(validationResult.data.maximum),
+          theme: validationResult.data.theme,
           userId: findUser.id,
         },
       });
@@ -114,6 +120,12 @@ export async function editBudgetAction({
   const session = await auth();
   if (!session) return { message: "User not found" };
 
+  //validate values
+  const validationResult = addBudgetSchema.safeParse(values);
+  if (!validationResult.success) {
+    return { message: validationResult.error.errors[0] };
+  }
+
   try {
     return await prismaDb.$transaction(async prisma => {
       const findUser = await prisma.user.findUnique({
@@ -148,9 +160,9 @@ export async function editBudgetAction({
           id: budgetId,
         },
         data: {
-          category: values.category,
-          maximum: parseFloat(values.maximum),
-          theme: values.theme,
+          category: validationResult.data.category,
+          maximum: parseFloat(validationResult.data.maximum),
+          theme: validationResult.data.theme,
         },
       });
 

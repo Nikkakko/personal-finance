@@ -59,7 +59,6 @@ const AddTransaction: React.FC<AddTransactionProps> = ({}) => {
       createdAt: new Date(),
       category: undefined,
       type: undefined,
-      isRecurring: false,
     },
   });
 
@@ -232,24 +231,6 @@ const AddTransaction: React.FC<AddTransactionProps> = ({}) => {
                     </Popover>
 
                     <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="isRecurring"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm whitespace-nowrap">
-                      Is this a recurring transaction?
-                    </FormLabel>
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
                   </FormItem>
                 )}
               />

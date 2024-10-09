@@ -146,3 +146,25 @@ export let getUserPots = async () => {
     },
   });
 };
+
+export let getRecurringBills = async () => {
+  const session = await auth();
+  if (!session) return null;
+  const user = await prismaDb.user.findFirst({
+    where: {
+      email: session?.user.email,
+    },
+  });
+
+  if (!user) return null;
+
+  return prismaDb.recurringBill.findMany({
+    where: {
+      userId: user.id,
+    },
+
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+};

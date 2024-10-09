@@ -53,6 +53,13 @@ enum Category {
   OTHER
 }
 
+enum Frequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
 
 
 
@@ -78,7 +85,7 @@ model Transaction {
   category  Category
   date      DateTime
   amount    Float
-  recurring Boolean
+
 
 
   type      TransactionType 
@@ -122,6 +129,28 @@ model Pot {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+model RecurringBill {
+  id        String   @id @default(cuid())
+  title     String
+  amount    Float
+  dueDate   DateTime
+  isPaid    Boolean  @default(false)
+  frequency Frequency
+  
+  // Optional fields
+  description String?
+  category    Category?
+  
+  // Relationships
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("recurring_bills")
+}
 
 
 model User {
@@ -141,6 +170,7 @@ model User {
   transactions  Transaction[]
   budgets       Budget[]
   pots          Pot[]
+  recurringBills RecurringBill[]
 
  
   createdAt DateTime @default(now())
