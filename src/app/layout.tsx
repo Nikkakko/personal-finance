@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={` ${publicSans.className} antialiased `}>
+      <body className={`${publicSans.className} antialiased `}>
         <SessionProvider>
           <Toaster />
           <ModalProvider />

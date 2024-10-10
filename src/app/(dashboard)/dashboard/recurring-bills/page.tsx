@@ -1,3 +1,4 @@
+import AddRecurringBillButton from "@/components/AddRecurringBillButton";
 import PageTitle from "@/components/PageTitle";
 import {
   Card,
@@ -8,10 +9,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getRecurringBills } from "@/lib/db/queries";
-import { formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 import { FileTextIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import * as React from "react";
+import { DataTable } from "./data-table";
+import { columns } from "./columns";
 
 interface RecurringBillsProps {}
 
@@ -22,21 +25,26 @@ const RecurringBills: React.FC<RecurringBillsProps> = async ({}) => {
 
   const totalBills = bills.reduce((acc, bill) => acc + bill.amount, 0);
 
-  //dueDate = bill.dat - 1 month
-
   // paid bills length + total, total upcomming length + total, due soon length + total
-  const paidBills = bills.filter(bill => bill.paid);
+  const paidBills = bills.filter(bill => bill.isPaid);
   const totalPaidBills = paidBills.reduce((acc, bill) => acc + bill.amount, 0);
 
-  const upcommingBills = bills.filter(bill => !bill.paid);
-  const totalUpcommingBills = upcommingBills.reduce(
+  const upcomingBills = bills.filter(bill => !bill.isPaid);
+  const totalUpcommingBills = upcomingBills.reduce(
     (acc, bill) => acc + bill.amount,
     0
   );
 
-  const dueSoonBills = upcommingBills.filter(
-    bill => new Date(bill.dueDate).getTime() < Date.now()
-  );
+  // Calculate the time range for due soon bills (1-2 days from now)
+  const now = Date.now();
+  const oneDayInMs = 24 * 60 * 60 * 1000;
+  const startDueSoon = now;
+  const endDueSoon = now + 2 * oneDayInMs;
+
+  const dueSoonBills = upcomingBills.filter(bill => {
+    const dueDate = new Date(bill.dueDate).getTime();
+    return dueDate >= startDueSoon && dueDate <= endDueSoon;
+  });
   const totalDueSoonBills = dueSoonBills.reduce(
     (acc, bill) => acc + bill.amount,
     0
@@ -44,16 +52,19 @@ const RecurringBills: React.FC<RecurringBillsProps> = async ({}) => {
 
   const summeryList = [
     {
+      id: "1",
       title: "Paid Bills",
       count: paidBills.length,
       total: totalPaidBills,
     },
     {
-      title: "Total Upcomming ",
-      count: upcommingBills.length,
+      id: "2",
+      title: "Total Upcoming ",
+      count: upcomingBills.length,
       total: totalUpcommingBills,
     },
     {
+      id: "3",
       title: "Due Soon",
       count: dueSoonBills.length,
       total: totalDueSoonBills,
@@ -62,7 +73,10 @@ const RecurringBills: React.FC<RecurringBillsProps> = async ({}) => {
 
   return (
     <div className="flex flex-col ">
-      <PageTitle title="Recurring Bills" />
+      <div className="flex items-center justify-between w-full">
+        <PageTitle title="Recurring Bills" />
+        <AddRecurringBillButton />
+      </div>
 
       <section className="mt-8 grid grid-cols-1 lg:grid-cols-2 ">
         <div className="flex flex-col gap-5 w-full max-w-sm">
@@ -75,8 +89,8 @@ const RecurringBills: React.FC<RecurringBillsProps> = async ({}) => {
                 {formatCurrency(totalBills, {
                   currency: "USD",
                   style: "currency",
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: 0,
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
                 })}
               </p>
             </div>
@@ -89,16 +103,25 @@ const RecurringBills: React.FC<RecurringBillsProps> = async ({}) => {
             </CardHeader>
             <CardContent>
               <div className="flex flex-col gap-4">
-                {summeryList.map(({ title, count, total }) => (
+                {summeryList.map(({ title, count, total, id }) => (
                   <div key={title} className="flex justify-between">
-                    <CardDescription>{title}</CardDescription>
-                    <CardDescription>
+                    <CardDescription
+                      className={cn(id === "3" && "text-destructive")}
+                    >
+                      {title}
+                    </CardDescription>
+                    <CardDescription
+                      className={cn(
+                        "font-bold",
+                        id === "3" && "text-destructive"
+                      )}
+                    >
                       {count} (
                       {formatCurrency(total, {
                         currency: "USD",
                         style: "currency",
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 0,
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
                       })}
                       )
                     </CardDescription>
@@ -109,7 +132,10 @@ const RecurringBills: React.FC<RecurringBillsProps> = async ({}) => {
             <CardFooter></CardFooter>
           </Card>
         </div>
-        <div>table</div>
+        {/* bill title, due date, amount */}
+        <section className="bg-white shadow-sm p-5 rounded-lg w-full">
+          <DataTable columns={columns} data={bills} />
+        </section>
       </section>
     </div>
   );

@@ -14,6 +14,12 @@ export async function addPotAction({
   const session = await auth();
   if (!session) return { message: "User not found" };
 
+  //validate values
+  const validationResult = addPotSchema.safeParse(values);
+  if (!validationResult.success) {
+    return { message: validationResult.error.errors[0] };
+  }
+
   try {
     return await prismaDb.$transaction(async prisma => {
       const findUser = await prisma.user.findUnique({
@@ -33,7 +39,7 @@ export async function addPotAction({
       const pot = await prisma.pot.findFirst({
         where: {
           userId: findUser.id,
-          name: values.name,
+          name: validationResult.data.name,
         },
       });
 
@@ -44,9 +50,9 @@ export async function addPotAction({
       // create pot
       await prisma.pot.create({
         data: {
-          name: values.name,
-          target: parseFloat(values.target),
-          theme: values.theme,
+          name: validationResult.data.name,
+          target: parseFloat(validationResult.data.target),
+          theme: validationResult.data.theme,
           userId: findUser.id,
           total: 0,
         },
@@ -75,6 +81,15 @@ export async function potAction({
       message: "User not found",
       title: "Error",
     };
+
+  //validate values
+  const validationResult = potActionSchema.safeParse(values);
+  if (!validationResult.success) {
+    return {
+      message: validationResult.error.errors[0],
+      title: "Error",
+    };
+  }
 
   try {
     return await prismaDb.$transaction(async prisma => {
@@ -114,7 +129,7 @@ export async function potAction({
             id: pot.id,
           },
           data: {
-            total: pot.total + parseFloat(values.amount),
+            total: pot.total + parseFloat(validationResult.data.amount),
           },
         });
       } else {
@@ -123,7 +138,7 @@ export async function potAction({
             id: pot.id,
           },
           data: {
-            total: pot.total - parseFloat(values.amount),
+            total: pot.total - parseFloat(validationResult.data.amount),
           },
         });
       }
@@ -210,6 +225,15 @@ export async function updatePotAction({
       title: "Error",
     };
 
+  //validate values
+  const validationResult = addPotSchema.safeParse(values);
+  if (!validationResult.success) {
+    return {
+      message: validationResult.error.errors[0],
+      title: "Error",
+    };
+  }
+
   try {
     return await prismaDb.$transaction(async prisma => {
       const findUser = await prisma.user.findUnique({
@@ -247,9 +271,9 @@ export async function updatePotAction({
           id: pot.id,
         },
         data: {
-          name: values.name,
-          target: parseFloat(values.target),
-          theme: values.theme,
+          name: validationResult.data.name,
+          target: parseFloat(validationResult.data.target),
+          theme: validationResult.data.theme,
         },
       });
 

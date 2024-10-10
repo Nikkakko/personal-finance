@@ -1,4 +1,4 @@
-import { Category, TransactionType, Theme } from "@prisma/client";
+import { Category, TransactionType, Theme, Frequency } from "@prisma/client";
 
 export const transactionsSelect = [
   {
@@ -165,5 +165,28 @@ export const themeSelect = [
     name: "Orange",
     value: Theme.ORANGE,
     color: themeColorMap[Theme.ORANGE],
+  },
+];
+
+export const frequencySelect = [
+  {
+    id: "1",
+    label: "Daily",
+    value: Frequency.DAILY,
+  },
+  {
+    id: "2",
+    label: "Weekly",
+    value: Frequency.WEEKLY,
+  },
+  {
+    id: "3",
+    label: "Monthly",
+    value: Frequency.MONTHLY,
+  },
+  {
+    id: "4",
+    label: "Yearly",
+    value: Frequency.YEARLY,
   },
 ];

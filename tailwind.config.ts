@@ -1,3 +1,4 @@
+import { themeColorMap } from "@/lib/constants";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -10,6 +11,25 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Add the themeColorMap here
+        theme: {
+          green: "#277C78",
+          cyan: "#82C9D7",
+          yellow: "#F2CDAC",
+          navy: "#626070",
+          red: "#C94736",
+          purple: "#826CB0",
+          lightPurple: "#AF81BA",
+          torquoise: "#597C7C",
+          brown: "#93674F",
+          magenta: "#934F6F",
+          blue: "#3F82B2",
+          navyGray: "#97A0AC",
+          armyGreen: "#7F9161",
+          gold: "#CAB361",
+          orange: "#BE6C49",
+          background: "#F8F4F0",
+        },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
