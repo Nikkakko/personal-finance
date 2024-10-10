@@ -17,11 +17,13 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "./password-input";
 import Link from "next/link";
 import { signup } from "@/app/(auth)/_actions";
+import { useRouter } from "next/navigation";
 
 interface SignUpFormProps {}
 
 const SignUpForm: React.FC<SignUpFormProps> = ({}) => {
   const [isPending, startTransition] = React.useTransition();
+  const router = useRouter();
   // 1. Define your form.
   const form = useForm<SignUpType>({
     resolver: zodResolver(signUpSchema),
@@ -43,7 +45,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({}) => {
         });
       }
 
-      form.reset();
+      if (res?.message === "User created successfully") {
+        form.reset();
+        router.push("/dashboard");
+      }
     });
   }
 

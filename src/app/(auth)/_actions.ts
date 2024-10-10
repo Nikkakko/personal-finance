@@ -1,8 +1,11 @@
 "use server";
 
+import { signIn } from "@/auth";
 import { prismaDb } from "@/lib/db/prisma";
 import { signUpSchema, SignUpType } from "@/lib/validaton";
 import bcrypt from "bcryptjs";
+import { AuthError } from "next-auth";
+
 import { redirect } from "next/navigation";
 
 export async function signup(values: SignUpType) {
@@ -40,7 +43,26 @@ export async function signup(values: SignUpType) {
       },
     });
 
-    redirect("/dashboard");
+    // 4. Automatically sign in the user
+    try {
+      await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+    } catch (error) {
+      if (error instanceof AuthError) {
+        switch (error.type) {
+          case "CredentialsSignin":
+            return { error: { message: "Invalid credentials." } };
+          default:
+            return { error: { message: "Something went wrong." } };
+        }
+      }
+      throw error;
+    }
+
+    return { message: "User created successfully" };
   } catch (error) {
     console.error(error);
   }

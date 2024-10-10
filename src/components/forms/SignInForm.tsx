@@ -55,12 +55,11 @@ const SignInForm: React.FC<SignInFormFormProps> = ({}) => {
             title: "Sign in successful",
           });
         }
+        router.push("/dashboard");
+        form.reset();
       } catch (error) {
         console.error("An unexpected error happened:", error);
       }
-
-      form.reset();
-      router.push("/dashboard");
     });
   }
 
@@ -70,7 +69,7 @@ const SignInForm: React.FC<SignInFormFormProps> = ({}) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-6 flex flex-col shadow-md p-8 w-full max-w-[560px] bg-secondary rounded-lg"
       >
-        <h1 className="text-3xl font-bold text-left">Sign Up</h1>
+        <h1 className="text-3xl font-bold text-left">Sign In</h1>
 
         <FormField
           control={form.control}

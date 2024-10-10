@@ -54,7 +54,6 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
           <Transactions className="max-w-2xl" data={dbUser?.transactions} />
         </div>
         <div className="flex flex-col gap-5">
-          {/* <Budgets className="" data={dbUser?.budgets} /> */}
           <BudgetSummary budgets={dbUser?.budgets} overview />
           <RecurringBills className="" />
         </div>
