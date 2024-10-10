@@ -78,8 +78,8 @@ const RecurringBills: React.FC<RecurringBillsProps> = async ({}) => {
         <AddRecurringBillButton />
       </div>
 
-      <section className="mt-8 grid grid-cols-1 lg:grid-cols-2 ">
-        <div className="flex flex-col gap-5 w-full max-w-sm">
+      <section className="mt-8 grid grid-cols-1 lg:grid-cols-6 gap-4 ">
+        <div className="flex flex-col gap-5 w-full max-w-sm lg:col-span-2 ">
           <div className="flex flex-col  p-6 bg-primary rounded-lg ">
             <FileTextIcon className="w-10 h-10 text-white" />
 
@@ -106,14 +106,14 @@ const RecurringBills: React.FC<RecurringBillsProps> = async ({}) => {
                 {summeryList.map(({ title, count, total, id }) => (
                   <div key={title} className="flex justify-between">
                     <CardDescription
-                      className={cn(id === "3" && "text-destructive")}
+                      className={cn(id === "3" && "text-theme-red")}
                     >
                       {title}
                     </CardDescription>
                     <CardDescription
                       className={cn(
                         "font-bold",
-                        id === "3" && "text-destructive"
+                        id === "3" && "text-theme-red"
                       )}
                     >
                       {count} (
@@ -133,9 +133,9 @@ const RecurringBills: React.FC<RecurringBillsProps> = async ({}) => {
           </Card>
         </div>
         {/* bill title, due date, amount */}
-        <section className="bg-white shadow-sm p-5 rounded-lg w-full">
+        <div className="bg-white shadow-sm p-5 rounded-lg w-full mt-10 lg:mt-0 lg:col-span-4 ">
           <DataTable columns={columns} data={bills} />
-        </section>
+        </div>
       </section>
     </div>
   );

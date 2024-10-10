@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Frequency } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { format, getDate, isBefore } from "date-fns";
-import { ArrowUpDown, CheckIcon } from "lucide-react";
+import { ArrowUpDown, CheckIcon, OctagonAlertIcon } from "lucide-react";
 
 export type Payment = {
   id: string;
@@ -23,7 +23,7 @@ export const columns: ColumnDef<Payment>[] = [
       return (
         <Button
           variant="ghost"
-          className="px-0"
+          className="px-0 "
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Title
@@ -90,7 +90,12 @@ export const columns: ColumnDef<Payment>[] = [
           )}
         >
           {formattedDate}{" "}
-          {isPaid && !isBeforeDate && <CheckIcon className={cn("w-4 h-4")} />}
+          {isPaid && !isBeforeDate && (
+            <CheckIcon className={cn("w-4 h-4 text-theme-green")} />
+          )}
+          {isBeforeDate && !isPaid && (
+            <OctagonAlertIcon className={cn("w-4 h-4 text-theme-red")} />
+          )}
         </div>
       );
     },
