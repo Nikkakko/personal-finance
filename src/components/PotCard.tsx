@@ -33,7 +33,7 @@ const PotCard: React.FC<PotCardProps> = ({ pot }) => {
   const [isPending, startTransition] = React.useTransition();
 
   return (
-    <div className="flex flex-col p-2 lg:p-5 bg-secondary shadow-sm">
+    <div className="flex flex-col p-2 lg:p-5 bg-white shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex gap-2 items-center">
           <ColorLine
@@ -41,7 +41,7 @@ const PotCard: React.FC<PotCardProps> = ({ pot }) => {
             className="rounded-full w-5 h-5"
           />
 
-          <h2 className="text-lg font-bold">{pot.name}</h2>
+          <h2 className="text-lg font-bold capitalize">{pot.name}</h2>
         </div>
         <Popover>
           <PopoverTrigger className="active:scale-95">

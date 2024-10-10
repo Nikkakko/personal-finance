@@ -61,7 +61,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
   ];
 
   return (
-    <div className="flex flex-col p-2 lg:p-8 bg-secondary shadow-sm">
+    <div className="flex flex-col p-2 lg:p-8 bg-white shadow-sm rounded">
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-3">
           <div
@@ -181,7 +181,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
             transaction.type === "EXPENSE"
         )
         .slice(0, 3).length === 0 ? null : (
-        <div className="mt-5 bg-background rounded shadow-sm p-5">
+        <div className="mt-5 bg-theme-background rounded shadow-sm p-5">
           <div className="flex items-center justify-between w-full">
             <h3 className="text-lg font-semibold">Latest Spendings</h3>
             {/* see all */}

@@ -1,6 +1,7 @@
 import { auth, signOut } from "@/auth";
 import AddBalanceButton from "@/components/AddTransaction";
 import Budgets from "@/components/Budgets";
+import BudgetSummary from "@/components/BudgetSummary";
 import PageTitle from "@/components/PageTitle";
 import PersonalFinanceCard from "@/components/PersonalFinanceCard";
 import Pots from "@/components/Pots";
@@ -47,11 +48,16 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
         </section>
       </React.Suspense>
 
-      <section className="grid grid-cols-5 grid-rows-7 gap-4 mt-8">
-        <Pots className="col-span-3 row-span-2" />
-        <Transactions className="col-span-3 row-span-5 col-start-1 row-start-3" />
-        <Budgets className="col-span-2 row-span-4 col-start-4 row-start-1" />
-        <RecurringBills className="col-span-2 row-span-3 col-start-4 row-start-5" />
+      <section className="grid  cols-1 lg:grid-cols-2  gap-4 mt-8">
+        <div className="flex flex-col gap-5">
+          <Pots className="max-w-2xl" data={dbUser?.pots} />
+          <Transactions className="max-w-2xl" data={dbUser?.transactions} />
+        </div>
+        <div className="flex flex-col gap-5">
+          {/* <Budgets className="" data={dbUser?.budgets} /> */}
+          <BudgetSummary budgets={dbUser?.budgets} overview />
+          <RecurringBills className="" />
+        </div>
       </section>
     </div>
   );

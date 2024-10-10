@@ -66,7 +66,7 @@ const AddPots: React.FC<AddPotsProps> = ({}) => {
         if ("message" in res && "title" in res) {
           toast({
             title: res.title,
-            description: res.message,
+            description: (res.message as string) || "",
           });
           closeModal();
           form.reset();

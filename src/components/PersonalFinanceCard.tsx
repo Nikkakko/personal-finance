@@ -24,7 +24,7 @@ const PersonalFinanceCard: React.FC<PersonalFinanceCardProps> = ({
   ];
 
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex flex-col lg:flex-row items-center gap-6">
       {itemCards.map((item, index) => (
         <Card
           key={index}

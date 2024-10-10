@@ -44,7 +44,15 @@ export let getUserFromDb = (email: string) => {
     },
     include: {
       balance: true,
-      budgets: true,
+      budgets: {
+        include: {
+          user: {
+            include: {
+              transactions: true,
+            },
+          },
+        },
+      },
       transactions: true,
       pots: true,
     },
